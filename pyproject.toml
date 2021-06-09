@@ -19,7 +19,7 @@
     filter_files = true
     sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
     known_first_party = ["lavalink", "audio"]
-    known_third_party= ["redbot", "yaml", "tabulate", "discord", "bs4"]
+    known_third_party= ["redbot", "yaml", "tabulate", "discord", "bs4", "requests-futures"]
     import_heading_future = "Future Imports"
     import_heading_stdlib = "Standard Library Imports"
     import_heading_thirdparty = "Dependency Imports"

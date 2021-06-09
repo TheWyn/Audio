@@ -4,11 +4,10 @@ from __future__ import annotations
 # Standard Library Imports
 from abc import ABC
 from typing import Tuple
-from urllib.parse import quote_plus
 
 # Dependency Imports
 from bs4 import BeautifulSoup
-import aiohttp
+from requests_futures.sessions import FuturesSession
 
 try:
     # Dependency Imports
@@ -26,12 +25,18 @@ class LyricUtilities(MixinMeta, ABC, metaclass=CompositeMetaClass):
 
     @staticmethod
     async def get_lyrics_string(artist_song: str) -> Tuple[str, str, str, str]:
-
-        searchquery = quote_plus(artist_song)
-        async with aiohttp.ClientSession(json_serialize=json.dumps) as session:
-            async with session.get(f"https://google.com/search?q={searchquery}+lyrics") as resp:
-                response_one = await resp.text()
-        soup = BeautifulSoup(response_one, "html.parser")
+        percents = {" ": "+", "!": "%21", '"': "%22", "#": "%23", "$": "%24", "%": "%25", "&": "%26", "'": "%27",
+                    "(": "%28", ")": "%29", "*": "%2A", "+": "%2B", "`": "%60", ",": "%2C", "-": "%2D", ".": "%2E",
+                    "/": "%2F"}
+        searchquery = ""
+        for char in artist_song:
+            if char in percents:
+                char = percents[char]
+            searchquery += char
+        session = FuturesSession()
+        future = session.get("https://google.com/search?q=" + searchquery + "+lyrics")
+        response_one = future.result()
+        soup = BeautifulSoup(response_one.text, 'html.parser')
         bouncer = "Our systems have detected unusual traffic from your computer network"
         if bouncer in soup.get_text():
             title_ = ""
