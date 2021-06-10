@@ -9,12 +9,6 @@ from typing import Tuple
 from bs4 import BeautifulSoup
 from requests_futures.sessions import FuturesSession
 
-try:
-    # Dependency Imports
-    from redbot import json
-except ImportError:
-    import json
-
 # Music Imports
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
